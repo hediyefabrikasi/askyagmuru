@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💖 Aşk Yağmuru</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ff5f9e, #ff8fcf);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
+
+    .app {
+      background: white;
+      width: 95%;
+      max-width: 420px;
+      height: 90vh;
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    h1 {
+      margin: 8px 0 4px;
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      color: #ff3b7b;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 0;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill {
+      background: #ffe2ec;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: #ff3b7b;
+    }
+
+    #gameArea {
+      flex: 1;
+      position: relative;
+      background: linear-gradient(180deg, #fff0f6, #ffe3f0);
+      overflow: hidden;
+    }
+
+    .player {
+      position: absolute;
+      bottom: 6px;
+      width: 70px;
+      height: 70px;
+      background: url("images/player.png") center/cover no-repeat;
+      border-radius: 50%;
+      transition: transform 0.05s linear;
+    }
+
+    .item {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bomb {
+      background-image: url("images/bomb.png");
+    }
+
+    .love {
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(255,59,123,0.4);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .modal {
+      background: white;
+      padding: 22px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      color: #ff3b7b;
+      font-size: 20px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      margin: 10px 0 14px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #ff5f9e, #ff8fcf);
+      border: none;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 6px 18px rgba(255,59,123,0.35);
+    }
+
+    button:active { transform: scale(0.97); }
+
+    .hidden { display: none; }
+
+    .combo {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      font-weight: 900;
+      color: #ff3b7b;
+      animation: comboPop 0.6s ease;
+      pointer-events: none;
+    }
+
+    @keyframes comboPop {
+      0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+      60% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+      100% { transform: translateX(-50%) scale(1); opacity: 0; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <h1 id="title">💖 Aşk Yağmuru</h1>
+
+  <div class="top-bar">
+    <div class="pill">⏱ <span id="time">0</span>s</div>
+    <div class="pill">💘 <span id="score">0</span></div>
+    <div class="pill">🔥 Combo <span id="combo">0</span></div>
+    <div class="pill">🏆 Best <span id="best">0</span></div>
+  </div>
+
+  <div id="gameArea">
+    <div id="player" class="player"></div>
+  </div>
+
+  <!-- START -->
+  <div id="startScreen" class="overlay">
+    <div class="modal">
+      <h2>💌 Hazır mısın?</h2>
+      <p>
+        Sevgilinin fotoğraflarını yakala ❤️<br>
+        Bombalara dikkat! 💣
+      </p>
+      <button onclick="startGame()">Oyuna Başla</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div id="gameOver" class="overlay hidden">
+    <div class="modal">
+      <h2>💔 Oyun Bitti</h2>
+      <p>
+        Skorun: <strong><span id="finalScore"></span></strong><br>
+        Süre: <strong><span id="finalTime"></span>s</strong><br>
+        En İyi Süre: <strong><span id="bestTime"></span>s</strong>
+      </p>
+      <button onclick="restartGame()">Tekrar Oyna</button>
+    </div>
+  </div>
+</div>
+
+<audio id="bgMusic" src="audios/bg-music.mp3" loop></audio>
+<audio id="catchSound" src="audios/catch.mp3"></audio>
+<audio id="bombSound" src="audios/bomb.mp3"></audio>
+<audio id="comboSound" src="audios/combo.mp3"></audio>
+
+<script>
+/* ---------- AYARLAR ---------- */
+const loveImages = [
+  "images/love1.jpg",
+  "images/love2.jpg",
+  "images/love3.jpg",
+  "images/love4.jpg",
+  "images/love5.jpg"
+];
+
+const spawnInterval = 900; // ms
+const baseFallSpeed = 2.2;
+const bombChance = 0.25;
+
+/* ---------- STATE ---------- */
+let score = 0;
+let combo = 0;
+let time = 0;
+let bestTime = Number(localStorage.getItem("bestTime")) || 0;
+
+let gameInterval = null;
+let spawnTimer = null;
+let timeTimer = null;
+let running = false;
+
+/* ---------- ELEMENTS ---------- */
+const gameArea = document.getElementById("gameArea");
+const player = document.getElementById("player");
+const scoreEl = document.getElementById("score");
+const comboEl = document.getElementById("combo");
+const timeEl = document.getElementById("time");
+const bestEl = document.getElementById("best");
+
+const startScreen = document.getElementById("startScreen");
+const gameOverScreen = document.getElementById("gameOver");
+const finalScoreEl = document.getElementById("finalScore");
+const finalTimeEl = document.getElementById("finalTime");
+const bestTimeEl = document.getElementById("bestTime");
+
+const bgMusic = document.getElementById("bgMusic");
+const catchSound = document.getElementById("catchSound");
+const bombSound = document.getElementById("bombSound");
+const comboSound = document.getElementById("comboSound");
+
+/* ---------- INIT ---------- */
+bestEl.textContent = bestTime;
+
+/* ---------- OYUN ---------- */
+function startGame() {
+  startScreen.classList.add("hidden");
+  gameOverScreen.classList.add("hidden");
+  resetGame();
+  running = true;
+
+  bgMusic.currentTime = 0;
+  bgMusic.volume = 0.4;
+  bgMusic.play();
+
+  spawnTimer = setInterval(spawnItem, spawnInterval);
+  gameInterval = requestAnimationFrame(gameLoop);
+  timeTimer = setInterval(() => {
+    time++;
+    timeEl.textContent = time;
+  }, 1000);
+}
+
+function resetGame() {
+  score = 0;
+  combo = 0;
+  time = 0;
+  updateUI();
+  [...document.querySelectorAll(".item")].forEach(el => el.remove());
+}
+
+function restartGame() {
+  gameOverScreen.classList.add("hidden");
+  startGame();
+}
+
+function endGame() {
+  running = false;
+  clearInterval(spawnTimer);
+  clearInterval(timeTimer);
+  bgMusic.pause();
+  bombSound.currentTime = 0;
+  bombSound.play();
+
+  finalScoreEl.textContent = score;
+  finalTimeEl.textContent = time;
+
+  if (time > bestTime) {
+    bestTime = time;
+    localStorage.setItem("bestTime", bestTime);
+  }
+
+  bestEl.textContent = bestTime;
+  bestTimeEl.textContent = bestTime;
+
+  gameOverScreen.classList.remove("hidden");
+}
+
+/* ---------- PLAYER MOVEMENT ---------- */
+let playerX = 50; // percent
+
+function setPlayerPosition(percent) {
+  const areaWidth = gameArea.clientWidth;
+  const playerWidth = player.offsetWidth;
+  const px = (percent / 100) * (areaWidth - playerWidth);
+  player.style.left = px + "px";
+}
+
+setPlayerPosition(playerX);
+
+gameArea.addEventListener("mousemove", e => {
+  if (!running) return;
+  const rect = gameArea.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  playerX = (x / rect.width) * 100;
+  setPlayerPosition(playerX);
+});
+
+gameArea.addEventListener("touchmove", e => {
+  if (!running) return;
+  const rect = gameArea.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left;
+  playerX = (x / rect.width) * 100;
+  setPlayerPosition(playerX);
+});
+
+/* ---------- SPAWN ---------- */
+function spawnItem() {
+  if (!running) return;
+
+  const item = document.createElement("div");
+  const isBomb = Math.random() < bombChance;
+
+  item.className = "item " + (isBomb ? "bomb" : "love");
+
+  if (!isBomb) {
+    const img = loveImages[Math.floor(Math.random() * loveImages.length)];
+    item.style.backgroundImage = `url('${img}')`;
+  }
+
+  item.dataset.type = isBomb ? "bomb" : "love";
+  item.dataset.y = 0;
+  item.dataset.speed = baseFallSpeed + Math.random() * 1.8;
+
+  const maxX = gameArea.clientWidth - 60;
+  item.style.left = Math.random() * maxX + "px";
+  item.style.top = "-70px";
+
+  gameArea.appendChild(item);
+}
+
+/* ---------- GAME LOOP ---------- */
+function gameLoop() {
+  if (!running) return;
+
+  const items = document.querySelectorAll(".item");
+  const playerRect = player.getBoundingClientRect();
+  const areaRect = gameArea.getBoundingClientRect();
+
+  items.forEach(item => {
+    let y = parseFloat(item.dataset.y);
+    y += parseFloat(item.dataset.speed);
+    item.dataset.y = y;
+    item.style.top = y + "px";
+
+    const itemRect = item.getBoundingClientRect();
+
+    // Çarpışma
+    if (
+      itemRect.bottom >= playerRect.top &&
+      itemRect.left <= playerRect.right &&
+      itemRect.right >= playerRect.left
+    ) {
+      if (item.dataset.type === "bomb") {
+        endGame();
+      } else {
+        handleCatch(item);
+      }
+    }
+
+    // Ekran dışı
+    if (y > areaRect.height + 80) {
+      if (item.dataset.type === "love") {
+        combo = 0;
+        comboEl.textContent = combo;
+      }
+      item.remove();
+    }
+  });
+
+  requestAnimationFrame(gameLoop);
+}
+
+/* ---------- CATCH ---------- */
+function handleCatch(item) {
+  score += 10 + combo * 2;
+  combo++;
+  updateUI();
+
+  catchSound.currentTime = 0;
+  catchSound.play();
+
+  if (combo > 0 && combo % 5 === 0) {
+    comboSound.currentTime = 0;
+    comboSound.play();
+    showComboText(combo + " COMBO!");
+  }
+
+  item.remove();
+}
+
+function updateUI() {
+  scoreEl.textContent = score;
+  comboEl.textContent = combo;
+  timeEl.textContent = time;
+}
+
+/* ---------- UI FX ---------- */
+function showComboText(text) {
+  const el = document.createElement("div");
+  el.className = "combo";
+  el.textContent = text;
+  gameArea.appendChild(el);
+  setTimeout(() => el.remove(), 600);
+}
+</script>
+
+</body>
+</html>
