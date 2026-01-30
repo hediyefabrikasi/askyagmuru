@@ -7,38 +7,37 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif}
 body{
-  background:linear-gradient(180deg,#ff7eb3,#ff758c);
+  background:linear-gradient(180deg,#ff6fae,#ff4d88);
   height:100vh;
   overflow:hidden;
   touch-action:none;
 }
 #game{
   position:relative;
-  width:100%;
+  width:100vw;
+  height:100svh;
   max-width:420px;
-  height:100vh;
   margin:0 auto;
-  overflow:hidden;
   background:rgba(255,255,255,0.15);
-  border-radius:0;
+  overflow:hidden;
 }
 #hud{
   position:absolute;
-  top:8px;
+  top:4px;
   left:0;
   width:100%;
   display:flex;
   justify-content:space-between;
-  padding:0 12px;
-  font-size:14px;
+  padding:0 10px;
+  font-size:12px;
   color:white;
   z-index:5;
 }
 #player{
   position:absolute;
-  bottom:12px;
-  width:64px;
-  height:64px;
+  bottom:6px;
+  width:48px;
+  height:48px;
   background:url("images/player.png") center/contain no-repeat;
   left:50%;
   transform:translateX(-50%);
@@ -46,9 +45,9 @@ body{
 }
 .item{
   position:absolute;
-  width:52px;
-  height:52px;
-  border-radius:12px;
+  width:42px;
+  height:42px;
+  border-radius:10px;
   background-size:cover;
   background-position:center;
 }
@@ -58,7 +57,7 @@ body{
 #startScreen,#gameOverScreen{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.6);
+  background:rgba(0,0,0,.55);
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -66,15 +65,17 @@ body{
   color:white;
   text-align:center;
   z-index:10;
+  padding:16px;
 }
+h1{font-size:20px;margin-bottom:6px}
+p{font-size:13px;margin-bottom:10px}
 button{
   background:#fff;
   border:none;
-  padding:12px 20px;
+  padding:10px 16px;
   border-radius:999px;
+  font-size:14px;
   font-weight:bold;
-  margin-top:12px;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -82,23 +83,23 @@ button{
 
 <div id="game">
   <div id="hud">
-    <div>💖 Skor: <span id="score">0</span></div>
-    <div>🔥 Combo: <span id="combo">0</span></div>
-    <div>🏆 En İyi: <span id="best">0</span></div>
+    <div>💖 <span id="score">0</span></div>
+    <div>🔥 <span id="combo">0</span></div>
+    <div>🏆 <span id="best">0</span></div>
   </div>
 
   <div id="player"></div>
 
   <div id="startScreen">
     <h1>💘 Kalp Yağmuru</h1>
-    <p>Sevgilinin fotoğraflarını yakala, bombalardan kaç!</p>
-    <button id="startBtn">Oyuna Başla</button>
+    <p>Sevgilinin fotoğraflarını yakala ❤️ Bombalardan kaç 💣</p>
+    <button id="startBtn">Başla</button>
   </div>
 
   <div id="gameOverScreen" style="display:none">
-    <h2>💔 Oyun Bitti</h2>
+    <h1>💔 Bitti</h1>
     <p>Skorun: <span id="finalScore">0</span></p>
-    <button id="restartBtn">Tekrar Oyna</button>
+    <button id="restartBtn">Tekrar</button>
   </div>
 </div>
 
@@ -120,14 +121,13 @@ const catchSound = document.getElementById("catchSound");
 const bombSound = document.getElementById("bombSound");
 const bgSound = document.getElementById("bgSound");
 
-let gameWidth, gameHeight;
-let playerX;
+let gameW, gameH;
+let playerX = 0;
 let score = 0;
 let combo = 0;
-let speed = 2.2;
+let speed = 1.9;
 let running = false;
-let spawnInterval;
-let moveInterval;
+let spawnTimer, moveTimer;
 
 const images = [
   "images/love1.jpg",
@@ -139,8 +139,8 @@ const bestScore = localStorage.getItem("kalpBest") || 0;
 bestEl.textContent = bestScore;
 
 function resize(){
-  gameWidth = game.clientWidth;
-  gameHeight = game.clientHeight;
+  gameW = game.clientWidth;
+  gameH = game.clientHeight;
 }
 window.addEventListener("resize", resize);
 resize();
@@ -148,7 +148,7 @@ resize();
 function startGame(){
   score = 0;
   combo = 0;
-  speed = 2.2;
+  speed = 1.9;
   running = true;
   scoreEl.textContent = 0;
   comboEl.textContent = 0;
@@ -157,17 +157,17 @@ function startGame(){
   bgSound.currentTime = 0;
   bgSound.play().catch(()=>{});
 
-  playerX = gameWidth / 2 - player.offsetWidth / 2;
+  playerX = gameW / 2 - player.offsetWidth / 2;
   player.style.left = playerX + "px";
 
-  spawnInterval = setInterval(spawnItem, 700);
-  moveInterval = setInterval(moveItems, 16);
+  spawnTimer = setInterval(spawnItem, 850);
+  moveTimer = setInterval(moveItems, 16);
 }
 
 function endGame(){
   running = false;
-  clearInterval(spawnInterval);
-  clearInterval(moveInterval);
+  clearInterval(spawnTimer);
+  clearInterval(moveTimer);
   document.querySelectorAll(".item").forEach(e=>e.remove());
   bgSound.pause();
   finalScoreEl.textContent = score;
@@ -183,9 +183,9 @@ function endGame(){
 function spawnItem(){
   if(!running) return;
   const el = document.createElement("div");
-  el.classList.add("item");
+  el.className = "item";
 
-  const isBomb = Math.random() < 0.22;
+  const isBomb = Math.random() < 0.25;
   if(isBomb){
     el.classList.add("bomb");
   } else {
@@ -194,9 +194,9 @@ function spawnItem(){
   }
 
   el.dataset.type = isBomb ? "bomb" : "love";
-  el.style.left = Math.random() * (gameWidth - 52) + "px";
-  el.style.top = "-60px";
-  el.dataset.y = -60;
+  el.style.left = Math.random() * (gameW - 42) + "px";
+  el.style.top = "-50px";
+  el.dataset.y = -50;
   game.appendChild(el);
 }
 
@@ -218,14 +218,14 @@ function moveItems(){
         catchSound.play().catch(()=>{});
         score += 10 + combo*2;
         combo++;
-        speed += 0.05;
+        speed += 0.04;
         scoreEl.textContent = score;
         comboEl.textContent = combo;
         el.remove();
       }
     }
 
-    if(y > gameHeight + 60){
+    if(y > gameH + 60){
       combo = 0;
       comboEl.textContent = combo;
       el.remove();
@@ -243,8 +243,7 @@ game.addEventListener("pointermove", e=>{
   if(!running) return;
   const rect = game.getBoundingClientRect();
   let x = e.clientX - rect.left - player.offsetWidth/2;
-  x = Math.max(0, Math.min(gameWidth - player.offsetWidth, x));
-  playerX = x;
+  x = Math.max(0, Math.min(gameW - player.offsetWidth, x));
   player.style.left = x + "px";
 });
 
