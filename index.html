@@ -2,501 +2,496 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Kalp Yağmuru 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kalp Yağmuru</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-
-:root{
-  --bg1:#ff7abf;
-  --bg2:#ff3c86;
-  --panel:rgba(255,255,255,.25);
-  --glass:rgba(255,255,255,.22);
-  --accent:#ff2f7a;
+:root {
+  --bg: #fff0f6;
+  --card: rgba(255,255,255,0.85);
+  --primary: #ff4d6d;
+  --text: #333;
 }
 
-body.romantic{
-  --bg1:#ff9acb;
-  --bg2:#ff3c86;
-  --accent:#ff2f7a;
-}
-body.pastel{
-  --bg1:#c7d2fe;
-  --bg2:#fbcfe8;
-  --accent:#7c3aed;
-}
-body.dark{
-  --bg1:#141414;
-  --bg2:#2c2c2c;
-  --accent:#f472b6;
-}
-body.neon{
-  --bg1:#020024;
-  --bg2:#090979;
-  --accent:#00ffff;
-}
+body.dark { --bg:#111; --card:#1c1c1c; --primary:#ff4d6d; --text:#fff; }
+body.neon { --bg:#050010; --card:#12002a; --primary:#00fff0; --text:#fff; }
+body.pastel { --bg:#fef6ff; --card:#fff; --primary:#ff9acb; --text:#444; }
+body.romantic { --bg:#ffe6ee; --card:#fff; --primary:#ff5d8f; --text:#333; }
 
-body{
-  background:radial-gradient(circle at top,var(--bg1),var(--bg2));
-  height:100vh;
-  overflow:hidden;
-  touch-action:none;
-  transition:.4s;
-}
+* { box-sizing:border-box; font-family:'Segoe UI',system-ui; }
 
-#game{
-  position:relative;
-  width:100vw;
-  height:100svh;
-  max-width:420px;
-  margin:0 auto;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.05)),
-    url("images/bg.jpg") center/cover no-repeat;
-  overflow:hidden;
-  border-radius:22px;
-  box-shadow:0 20px 50px rgba(0,0,0,.35);
-}
-
-/* ---------- HUD ---------- */
-#hud{
-  position:absolute;
-  top:10px;
-  left:10px;
-  right:10px;
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
   display:flex;
-  justify-content:space-between;
-  gap:6px;
-  z-index:5;
-}
-
-.hud-pill{
-  background:var(--glass);
-  backdrop-filter:blur(14px);
-  border-radius:999px;
-  padding:8px 14px;
-  font-size:14px;
-  font-weight:900;
-  color:white;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  box-shadow:0 6px 18px rgba(255,80,150,.35);
-}
-
-.hud-pill span{
-  font-size:15px;
-}
-
-/* ---------- CONTROLS ---------- */
-#controls{
-  position:absolute;
-  bottom:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  z-index:6;
-}
-
-.ctrl-btn{
-  flex:1;
-  background:var(--glass);
-  backdrop-filter:blur(14px);
-  border-radius:16px;
-  padding:10px;
-  font-size:12px;
-  font-weight:900;
-  color:white;
-  display:flex;
-  align-items:center;
   justify-content:center;
-  gap:6px;
-  box-shadow:0 8px 22px rgba(0,0,0,.25);
+  align-items:center;
+  height:100vh;
 }
 
-/* ---------- PLAYER ---------- */
-#player{
-  position:absolute;
-  bottom:20px;
-  width:82px;
-  height:82px;
-  background:url("images/player.png") center/contain no-repeat;
-  filter:drop-shadow(0 12px 24px rgba(255,0,120,.6));
-  transition:transform .08s ease;
-  pointer-events:none;
-}
-
-#player.catch{
-  transform:scale(1.12);
-}
-
-/* ---------- ITEMS ---------- */
-.item{
-  position:absolute;
-  width:64px;
-  height:64px;
-  border-radius:18px;
-  background-size:cover;
-  background-position:center;
-  box-shadow:0 10px 28px rgba(0,0,0,.3);
-  animation:float 2s ease-in-out infinite alternate;
-}
-
-@keyframes float{
-  from{transform:translateY(0)}
-  to{transform:translateY(8px)}
-}
-
-.bomb{
-  background:url("images/bomb.png") center/contain no-repeat;
-  filter:drop-shadow(0 8px 18px rgba(255,0,0,.5));
-}
-
-/* ---------- OVERLAYS ---------- */
-.overlay{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,rgba(255,60,150,.85),rgba(120,0,80,.95));
+.app {
+  width:100%;
+  max-width:360px;
+  height:100%;
+  max-height:700px;
+  background:linear-gradient(180deg, rgba(255,255,255,.15), rgba(0,0,0,.05));
+  border-radius:24px;
+  padding:10px;
   display:flex;
   flex-direction:column;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+
+/* HEADER */
+.header {
+  background:var(--card);
+  border-radius:18px;
+  padding:8px 12px;
+  display:flex;
+  justify-content:space-between;
   align-items:center;
+  margin-bottom:6px;
+}
+
+.header-left {
+  font-weight:700;
+  font-size:14px;
+}
+
+.header-right {
+  display:flex;
+  gap:6px;
+}
+
+.icon-btn {
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:var(--primary);
+  color:white;
+  border:none;
+  display:flex;
   justify-content:center;
+  align-items:center;
+  font-size:14px;
+  cursor:pointer;
+}
+
+/* STATS */
+.stats {
+  display:flex;
+  justify-content:space-between;
+  background:var(--card);
+  border-radius:16px;
+  padding:6px 10px;
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+/* GAME */
+.game-wrap {
+  flex:1;
+  background:linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.12));
+  border-radius:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* PLAYER */
+.player {
+  position:absolute;
+  bottom:8px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:white;
+  overflow:hidden;
+  box-shadow:0 6px 15px rgba(0,0,0,.25);
+  transition:.08s;
+}
+
+.player img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* FALLING ITEMS */
+.item {
+  position:absolute;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  overflow:hidden;
+  background:white;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+
+.item img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* BOMB */
+.bomb {
+  background:#000;
+  color:white;
+  font-weight:bold;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* START SCREEN */
+.overlay {
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.8));
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  z-index:5;
   color:white;
   text-align:center;
-  z-index:10;
-  padding:22px;
+  padding:20px;
 }
 
-.overlay-card{
-  background:rgba(255,255,255,.22);
-  backdrop-filter:blur(18px);
-  border-radius:28px;
-  padding:26px 22px;
-  width:100%;
-  max-width:340px;
-  box-shadow:0 25px 60px rgba(0,0,0,.45);
-  animation:pop .4s ease;
+.overlay h1 {
+  font-size:22px;
+  margin:0;
 }
 
-@keyframes pop{
-  from{transform:scale(.9);opacity:0}
-  to{transform:scale(1);opacity:1}
+.overlay p {
+  font-size:13px;
+  opacity:.9;
 }
 
-.overlay h1{
-  font-size:26px;
-  margin-bottom:6px;
-  font-weight:900;
-}
-
-.overlay p{
-  font-size:14px;
-  opacity:.95;
-  margin-bottom:16px;
-}
-
-.overlay button{
-  width:100%;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+.start-btn {
+  background:var(--primary);
+  color:white;
   border:none;
-  color:white;
-  padding:14px;
-  border-radius:16px;
-  font-size:15px;
-  font-weight:900;
-  box-shadow:0 8px 22px rgba(255,60,130,.5);
+  border-radius:20px;
+  padding:12px 24px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
 }
 
-/* ---------- EFFECTS ---------- */
-.heart-burst{
+/* THEMES PANEL */
+.theme-panel {
   position:absolute;
-  width:14px;
-  height:14px;
-  background:radial-gradient(circle at 30% 30%,#fff,var(--accent));
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--card);
+  border-radius:20px;
+  padding:6px 10px;
+  display:flex;
+  gap:8px;
+}
+
+.theme-btn {
+  width:26px;
+  height:26px;
   border-radius:50%;
-  pointer-events:none;
-  animation:burst .6s ease-out forwards;
+  border:none;
+  cursor:pointer;
 }
 
-@keyframes burst{
-  from{transform:translate(0,0) scale(1);opacity:1}
-  to{transform:translate(var(--x),var(--y)) scale(.1);opacity:0}
+.theme-romantic { background:#ff5d8f; }
+.theme-dark { background:#000; }
+.theme-pastel { background:#ffb3d9; }
+.theme-neon { background:#00fff0; }
+
+/* HEART BURST */
+.heart {
+  position:absolute;
+  font-size:20px;
+  animation:pop .8s ease-out forwards;
 }
 
-/* ---------- GAME OVER ---------- */
-#finalScore{
-  font-size:26px;
-  font-weight:900;
+@keyframes pop {
+  0% { transform:scale(0); opacity:1; }
+  100% { transform:scale(1.6) translateY(-40px); opacity:0; }
+}
+
+/* GIFT SCREEN */
+.gift-screen {
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(255,0,100,.7), rgba(255,0,150,.9));
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
   color:white;
+  text-align:center;
+  padding:20px;
+  z-index:10;
+}
+
+.gift-screen h2 {
+  font-size:22px;
+}
+
+.gift-screen p {
+  font-size:14px;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body class="romantic">
 
-<div id="game">
+<div class="app">
 
-  <!-- HUD -->
-  <div id="hud">
-    <div class="hud-pill">💖 <span id="score">0</span></div>
-    <div class="hud-pill">🔥 <span id="combo">0</span></div>
-    <div class="hud-pill">🏆 <span id="best">0</span></div>
-  </div>
-
-  <!-- PLAYER -->
-  <div id="player"></div>
-
-  <!-- CONTROLS -->
-  <div id="controls">
-    <div class="ctrl-btn" id="soundBtn">🔊 Ses</div>
-    <div class="ctrl-btn" id="themeBtn">🎨 Tema</div>
-  </div>
-
-  <!-- START / GIFT -->
-  <div id="startScreen" class="overlay">
-    <div class="overlay-card">
-      <h1>💌 <span id="loverName">Aşkım</span> İçin</h1>
-      <p id="giftText">Bu oyunu sana özel hazırladım 💖<br>Kalplerimizi birlikte yakalayalım 😘</p>
-      <button id="startBtn">Oyuna Başla</button>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">💖 <span id="playerName">Aşkım</span> için</div>
+    <div class="header-right">
+      <button class="icon-btn" id="soundBtn">🔊</button>
+      <button class="icon-btn" id="giftBtn">🎁</button>
     </div>
   </div>
 
-  <!-- GAME OVER -->
-  <div id="gameOver" class="overlay" style="display:none">
-    <div class="overlay-card">
-      <h1>💖 Harika Oynadın <span id="finalName"></span>!</h1>
-      <p>Skorun</p>
-      <div id="finalScore">0</div>
-      <button id="restartBtn">Tekrar Oyna</button>
+  <!-- STATS -->
+  <div class="stats">
+    <div>❤️ Skor: <span id="score">0</span></div>
+    <div>🔥 Combo: <span id="combo">0</span></div>
+    <div>🏆 Rekor: <span id="best">0</span></div>
+  </div>
+
+  <!-- GAME -->
+  <div class="game-wrap" id="game">
+    <div class="player" id="player">
+      <img src="images/player.png">
+    </div>
+
+    <!-- START -->
+    <div class="overlay" id="startScreen">
+      <h1>💘 Kalp Yağmuru</h1>
+      <p>Sevgilinin fotoğraflarını yakala, bombalardan kaç!</p>
+      <button class="start-btn" id="startBtn">Oyuna Başla</button>
+    </div>
+
+    <!-- THEMES -->
+    <div class="theme-panel">
+      <button class="theme-btn theme-romantic" data-theme="romantic"></button>
+      <button class="theme-btn theme-pastel" data-theme="pastel"></button>
+      <button class="theme-btn theme-neon" data-theme="neon"></button>
+      <button class="theme-btn theme-dark" data-theme="dark"></button>
+    </div>
+
+    <!-- GIFT -->
+    <div class="gift-screen" id="giftScreen">
+      <h2>🎁 Sana Bir Mesajım Var</h2>
+      <p id="giftText">Seni her yakalayışımda kalbim biraz daha sana geliyor 💖</p>
+      <button class="start-btn" onclick="closeGift()">Kapat</button>
     </div>
   </div>
 
 </div>
 
+<!-- AUDIO -->
 <audio id="catchSound" src="audios/catch.mp3"></audio>
 <audio id="bombSound" src="audios/bomb.mp3"></audio>
-<audio id="bgSound" src="audios/bg.mp3" loop></audio>
 
 <script>
-/* ===========================
-   🔧 SATIŞ İÇİN AYARLAR
-=========================== */
-
-// 👉 MÜŞTERİ ADI
-const CUSTOMER_NAME = "Umut";
-
-// 👉 HEDİYE MESAJI
-const GIFT_MESSAGE = "Bu oyunu sana özel hazırladım 💖\nKalplerimizi birlikte yakalayalım 😘";
-
-// 👉 FOTOĞRAFLAR
-const images = [
-  "images/love1.jpg",
-  "images/love2.jpg",
-  "images/love3.jpg"
+/* ===== CONFIG ===== */
+const playerName = "Aşkım"; // müşteri adı
+const photos = [
+  "images/photo1.jpg",
+  "images/photo2.jpg",
+  "images/photo3.jpg",
+  "images/photo4.jpg",
+  "images/photo5.jpg"
 ];
 
-/* ===========================
-   🎮 OYUN MOTORU
-=========================== */
-
+/* ===== ELEMENTS ===== */
 const game = document.getElementById("game");
 const player = document.getElementById("player");
 const scoreEl = document.getElementById("score");
 const comboEl = document.getElementById("combo");
 const bestEl = document.getElementById("best");
 const startScreen = document.getElementById("startScreen");
-const gameOver = document.getElementById("gameOver");
-const finalScoreEl = document.getElementById("finalScore");
-const loverNameEl = document.getElementById("loverName");
-const finalNameEl = document.getElementById("finalName");
-
+const startBtn = document.getElementById("startBtn");
 const soundBtn = document.getElementById("soundBtn");
-const themeBtn = document.getElementById("themeBtn");
+const giftBtn = document.getElementById("giftBtn");
+const giftScreen = document.getElementById("giftScreen");
+const playerNameEl = document.getElementById("playerName");
 
 const catchSound = document.getElementById("catchSound");
 const bombSound = document.getElementById("bombSound");
-const bgSound = document.getElementById("bgSound");
 
-loverNameEl.textContent = CUSTOMER_NAME;
-finalNameEl.textContent = CUSTOMER_NAME;
-document.getElementById("giftText").innerHTML = GIFT_MESSAGE.replace(/\n/g,"<br>");
-
-let gameW, gameH;
-let playerX = 0;
+/* ===== STATE ===== */
+let gameRunning = false;
 let score = 0;
 let combo = 0;
-let speed = 2.1;
-let running = false;
-let spawnTimer, moveTimer;
-let soundOn = true;
+let bestScore = localStorage.getItem("heartBest") || 0;
+let muted = false;
+let spawnInterval;
 
-const themes = ["romantic","pastel","dark","neon"];
-let themeIndex = 0;
-
-/* ---------- BEST SCORE ---------- */
-let bestScore = localStorage.getItem("kalpBest") || 0;
+/* ===== INIT ===== */
+playerNameEl.textContent = playerName;
 bestEl.textContent = bestScore;
 
-/* ---------- RESIZE ---------- */
-function resize(){
-  gameW = game.clientWidth;
-  gameH = game.clientHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-/* ---------- GAME FLOW ---------- */
-function startGame(){
-  score = 0;
-  combo = 0;
-  speed = 2.1;
-  running = true;
-  scoreEl.textContent = 0;
-  comboEl.textContent = 0;
-  startScreen.style.display = "none";
-  gameOver.style.display = "none";
-
-  playerX = gameW / 2 - player.offsetWidth / 2;
-  player.style.left = playerX + "px";
-
-  if(soundOn){
-    bgSound.currentTime = 0;
-    bgSound.play().catch(()=>{});
-  }
-
-  spawnTimer = setInterval(spawnItem, 820);
-  moveTimer = setInterval(moveItems, 16);
-}
-
-function endGame(){
-  running = false;
-  clearInterval(spawnTimer);
-  clearInterval(moveTimer);
-  document.querySelectorAll(".item").forEach(e=>e.remove());
-  bgSound.pause();
-  finalScoreEl.textContent = score;
-
-  if(score > bestScore){
-    bestScore = score;
-    localStorage.setItem("kalpBest", bestScore);
-    bestEl.textContent = bestScore;
-  }
-
-  gameOver.style.display = "flex";
-}
-
-/* ---------- SPAWN ---------- */
-function spawnItem(){
-  if(!running) return;
-  const el = document.createElement("div");
-  el.className = "item";
-
-  const isBomb = Math.random() < 0.25;
-  if(isBomb){
-    el.classList.add("bomb");
-  } else {
-    const img = images[Math.floor(Math.random()*images.length)];
-    el.style.backgroundImage = `url(${img})`;
-  }
-
-  el.dataset.type = isBomb ? "bomb" : "love";
-  el.style.left = Math.random() * (gameW - 64) + "px";
-  el.style.top = "-70px";
-  el.dataset.y = -70;
-  game.appendChild(el);
-}
-
-/* ---------- MOVE ---------- */
-function moveItems(){
-  if(!running) return;
-  document.querySelectorAll(".item").forEach(el=>{
-    let y = parseFloat(el.dataset.y);
-    y += speed;
-    el.dataset.y = y;
-    el.style.top = y + "px";
-
-    if(checkCollision(el)){
-      if(el.dataset.type === "bomb"){
-        if(soundOn){
-          bombSound.currentTime = 0;
-          bombSound.play().catch(()=>{});
-        }
-        endGame();
-      } else {
-        if(soundOn){
-          catchSound.currentTime = 0;
-          catchSound.play().catch(()=>{});
-        }
-        score += 10 + combo * 3;
-        combo++;
-        speed += 0.05;
-        scoreEl.textContent = score;
-        comboEl.textContent = combo;
-        heartBurst(el);
-        player.classList.add("catch");
-        setTimeout(()=>player.classList.remove("catch"),120);
-        el.remove();
-      }
-    }
-
-    if(y > gameH + 80){
-      combo = 0;
-      comboEl.textContent = combo;
-      el.remove();
-    }
+/* ===== THEME ===== */
+document.querySelectorAll(".theme-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.body.className = btn.dataset.theme;
   });
-}
-
-/* ---------- COLLISION ---------- */
-function checkCollision(el){
-  const p = player.getBoundingClientRect();
-  const i = el.getBoundingClientRect();
-  return !(i.right < p.left || i.left > p.right || i.bottom < p.top || i.top > p.bottom);
-}
-
-/* ---------- TOUCH MOVE ---------- */
-game.addEventListener("pointermove", e=>{
-  if(!running) return;
-  const rect = game.getBoundingClientRect();
-  let x = e.clientX - rect.left - player.offsetWidth/2;
-  x = Math.max(0, Math.min(gameW - player.offsetWidth, x));
-  player.style.left = x + "px";
 });
 
-/* ---------- HEART BURST ---------- */
-function heartBurst(el){
-  for(let i=0;i<10;i++){
-    const h = document.createElement("div");
-    h.className = "heart-burst";
-    const x = Math.random()*60-30;
-    const y = Math.random()*60-30;
-    h.style.setProperty("--x", x+"px");
-    h.style.setProperty("--y", y+"px");
-    h.style.left = el.offsetLeft + el.offsetWidth/2 + "px";
-    h.style.top = el.offsetTop + el.offsetHeight/2 + "px";
-    game.appendChild(h);
-    setTimeout(()=>h.remove(),600);
+/* ===== SOUND ===== */
+soundBtn.onclick = () => {
+  muted = !muted;
+  soundBtn.textContent = muted ? "🔇" : "🔊";
+};
+
+function play(sound) {
+  if (!muted) {
+    sound.currentTime = 0;
+    sound.play();
   }
 }
 
-/* ---------- CONTROLS ---------- */
-soundBtn.onclick = ()=>{
-  soundOn = !soundOn;
-  soundBtn.textContent = soundOn ? "🔊 Ses" : "🔇 Sessiz";
-  if(!soundOn) bgSound.pause();
+/* ===== PLAYER MOVE ===== */
+let playerX = game.clientWidth / 2 - 28;
+player.style.left = playerX + "px";
+
+game.addEventListener("touchmove", e => {
+  if (!gameRunning) return;
+  const rect = game.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left - 28;
+  movePlayer(x);
+});
+
+game.addEventListener("mousemove", e => {
+  if (!gameRunning) return;
+  const rect = game.getBoundingClientRect();
+  const x = e.clientX - rect.left - 28;
+  movePlayer(x);
+});
+
+function movePlayer(x) {
+  const max = game.clientWidth - 56;
+  playerX = Math.max(0, Math.min(max, x));
+  player.style.left = playerX + "px";
+}
+
+/* ===== START GAME ===== */
+startBtn.onclick = startGame;
+
+function startGame() {
+  startScreen.style.display = "none";
+  score = 0;
+  combo = 0;
+  updateUI();
+  gameRunning = true;
+  spawnInterval = setInterval(spawnItem, 850);
+}
+
+/* ===== SPAWN ===== */
+function spawnItem() {
+  if (!gameRunning) return;
+
+  const item = document.createElement("div");
+  const isBomb = Math.random() < 0.18;
+
+  item.className = "item";
+
+  if (isBomb) {
+    item.classList.add("bomb");
+    item.textContent = "💣";
+  } else {
+    const img = document.createElement("img");
+    img.src = photos[Math.floor(Math.random() * photos.length)];
+    item.appendChild(img);
+  }
+
+  const x = Math.random() * (game.clientWidth - 42);
+  item.style.left = x + "px";
+  item.style.top = "-50px";
+  game.appendChild(item);
+
+  let y = -50;
+  const speed = 2.2 + Math.random() * 1.4;
+
+  const fall = setInterval(() => {
+    y += speed;
+    item.style.top = y + "px";
+
+    if (y > game.clientHeight) {
+      clearInterval(fall);
+      item.remove();
+      combo = 0;
+      updateUI();
+    }
+
+    if (checkCollision(item)) {
+      clearInterval(fall);
+      item.remove();
+      if (isBomb) {
+        play(bombSound);
+        combo = 0;
+        score = Math.max(0, score - 2);
+      } else {
+        play(catchSound);
+        combo++;
+        score += 1 + Math.floor(combo / 3);
+        spawnHeart();
+      }
+      updateUI();
+    }
+  }, 16);
+}
+
+/* ===== COLLISION ===== */
+function checkCollision(item) {
+  const iRect = item.getBoundingClientRect();
+  const pRect = player.getBoundingClientRect();
+  return !(
+    iRect.bottom < pRect.top ||
+    iRect.top > pRect.bottom ||
+    iRect.right < pRect.left ||
+    iRect.left > pRect.right
+  );
+}
+
+/* ===== HEART ANIMATION ===== */
+function spawnHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "❤️";
+  heart.style.left = playerX + 20 + "px";
+  heart.style.top = (game.clientHeight - 90) + "px";
+  game.appendChild(heart);
+  setTimeout(() => heart.remove(), 800);
+}
+
+/* ===== UI ===== */
+function updateUI() {
+  scoreEl.textContent = score;
+  comboEl.textContent = combo;
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem("heartBest", bestScore);
+    bestEl.textContent = bestScore;
+  }
+}
+
+/* ===== GIFT ===== */
+giftBtn.onclick = () => {
+  giftScreen.style.display = "flex";
 };
 
-themeBtn.onclick = ()=>{
-  themeIndex = (themeIndex + 1) % themes.length;
-  document.body.className = themes[themeIndex];
-};
-
-/* ---------- BUTTONS ---------- */
-document.getElementById("startBtn").onclick = startGame;
-document.getElementById("restartBtn").onclick = startGame;
+function closeGift() {
+  giftScreen.style.display = "none";
+}
 </script>
 
 </body>
