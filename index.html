@@ -2,113 +2,106 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kalp Yağmuru</title>
 
 <style>
 :root {
-  --bg: #fff0f6;
-  --card: rgba(255,255,255,0.85);
-  --primary: #ff4d6d;
-  --text: #333;
+  --bg:#ffe6f0;
+  --card:rgba(255,255,255,.9);
+  --primary:#ff4d8d;
+  --text:#333;
 }
 
-body.dark { --bg:#111; --card:#1c1c1c; --primary:#ff4d6d; --text:#fff; }
-body.neon { --bg:#050010; --card:#12002a; --primary:#00fff0; --text:#fff; }
-body.pastel { --bg:#fef6ff; --card:#fff; --primary:#ff9acb; --text:#444; }
+body.dark { --bg:#0d0d0d; --card:#1a1a1a; --primary:#ff4d8d; --text:#fff; }
+body.neon { --bg:#050012; --card:#12002a; --primary:#00fff0; --text:#fff; }
+body.pastel { --bg:#fff0f7; --card:#fff; --primary:#ff9acb; --text:#333; }
 body.romantic { --bg:#ffe6ee; --card:#fff; --primary:#ff5d8f; --text:#333; }
 
-* { box-sizing:border-box; font-family:'Segoe UI',system-ui; }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-body {
+html, body {
   margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden; /* ✅ SCROLL TAMAMEN KAPALI */
   background:var(--bg);
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont;
 }
 
 .app {
-  width:100%;
-  max-width:360px;
-  height:100%;
-  max-height:700px;
-  background:linear-gradient(180deg, rgba(255,255,255,.15), rgba(0,0,0,.05));
-  border-radius:24px;
-  padding:10px;
+  width:100vw;
+  height:100vh;
+  max-width:420px;
+  margin:auto;
   display:flex;
   flex-direction:column;
-  box-shadow:0 20px 50px rgba(0,0,0,.2);
+  padding:8px;
+  gap:6px;
 }
 
 /* HEADER */
 .header {
   background:var(--card);
   border-radius:18px;
-  padding:8px 12px;
+  padding:6px 12px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:6px;
-}
-
-.header-left {
   font-weight:700;
-  font-size:14px;
+  font-size:13px;
 }
 
-.header-right {
+/* ICONS */
+.icon-row {
   display:flex;
   gap:6px;
 }
 
 .icon-btn {
-  width:32px;
-  height:32px;
+  width:30px;
+  height:30px;
   border-radius:50%;
   background:var(--primary);
   color:white;
   border:none;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   font-size:14px;
-  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* STATS */
 .stats {
-  display:flex;
-  justify-content:space-between;
   background:var(--card);
   border-radius:16px;
   padding:6px 10px;
   font-size:12px;
-  margin-bottom:6px;
+  display:flex;
+  justify-content:space-between;
 }
 
 /* GAME */
 .game-wrap {
   flex:1;
   background:linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.12));
-  border-radius:20px;
+  border-radius:22px;
   position:relative;
   overflow:hidden;
+  touch-action:none; /* ✅ parmak kaydırma oyuna özel */
 }
 
 /* PLAYER */
 .player {
   position:absolute;
-  bottom:8px;
+  bottom:10px;
   width:56px;
   height:56px;
   border-radius:50%;
   background:white;
   overflow:hidden;
   box-shadow:0 6px 15px rgba(0,0,0,.25);
-  transition:.08s;
 }
 
 .player img {
@@ -117,11 +110,11 @@ body {
   object-fit:cover;
 }
 
-/* FALLING ITEMS */
+/* ITEMS */
 .item {
   position:absolute;
-  width:42px;
-  height:42px;
+  width:40px;
+  height:40px;
   border-radius:12px;
   overflow:hidden;
   background:white;
@@ -134,21 +127,20 @@ body {
   object-fit:cover;
 }
 
-/* BOMB */
 .bomb {
   background:#000;
   color:white;
-  font-weight:bold;
+  font-size:18px;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
 
 /* START SCREEN */
 .overlay {
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.8));
+  background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.85));
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -175,16 +167,15 @@ body {
   color:white;
   border:none;
   border-radius:20px;
-  padding:12px 24px;
+  padding:12px 26px;
   font-size:14px;
   font-weight:700;
-  cursor:pointer;
 }
 
-/* THEMES PANEL */
+/* THEMES */
 .theme-panel {
   position:absolute;
-  bottom:12px;
+  bottom:10px;
   left:50%;
   transform:translateX(-50%);
   background:var(--card);
@@ -199,7 +190,6 @@ body {
   height:26px;
   border-radius:50%;
   border:none;
-  cursor:pointer;
 }
 
 .theme-romantic { background:#ff5d8f; }
@@ -207,7 +197,7 @@ body {
 .theme-pastel { background:#ffb3d9; }
 .theme-neon { background:#00fff0; }
 
-/* HEART BURST */
+/* HEART */
 .heart {
   position:absolute;
   font-size:20px;
@@ -215,15 +205,15 @@ body {
 }
 
 @keyframes pop {
-  0% { transform:scale(0); opacity:1; }
-  100% { transform:scale(1.6) translateY(-40px); opacity:0; }
+  from { transform:scale(.4); opacity:1; }
+  to { transform:scale(1.6) translateY(-40px); opacity:0; }
 }
 
-/* GIFT SCREEN */
+/* GIFT */
 .gift-screen {
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg, rgba(255,0,100,.7), rgba(255,0,150,.9));
+  background:linear-gradient(180deg, rgba(255,0,100,.75), rgba(255,0,150,.9));
   display:none;
   justify-content:center;
   align-items:center;
@@ -251,8 +241,8 @@ body {
 
   <!-- HEADER -->
   <div class="header">
-    <div class="header-left">💖 <span id="playerName">Aşkım</span> için</div>
-    <div class="header-right">
+    <div>💖 <span id="playerName">Aşkım</span> için</div>
+    <div class="icon-row">
       <button class="icon-btn" id="soundBtn">🔊</button>
       <button class="icon-btn" id="giftBtn">🎁</button>
     </div>
@@ -260,13 +250,14 @@ body {
 
   <!-- STATS -->
   <div class="stats">
-    <div>❤️ Skor: <span id="score">0</span></div>
-    <div>🔥 Combo: <span id="combo">0</span></div>
-    <div>🏆 Rekor: <span id="best">0</span></div>
+    <div>❤️ <span id="score">0</span></div>
+    <div>🔥 <span id="combo">0</span></div>
+    <div>🏆 <span id="best">0</span></div>
   </div>
 
   <!-- GAME -->
   <div class="game-wrap" id="game">
+
     <div class="player" id="player">
       <img src="images/player.png">
     </div>
@@ -292,8 +283,8 @@ body {
       <p id="giftText">Seni her yakalayışımda kalbim biraz daha sana geliyor 💖</p>
       <button class="start-btn" onclick="closeGift()">Kapat</button>
     </div>
-  </div>
 
+  </div>
 </div>
 
 <!-- AUDIO -->
@@ -341,9 +332,7 @@ bestEl.textContent = bestScore;
 
 /* ===== THEME ===== */
 document.querySelectorAll(".theme-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.body.className = btn.dataset.theme;
-  });
+  btn.onclick = () => document.body.className = btn.dataset.theme;
 });
 
 /* ===== SOUND ===== */
@@ -360,21 +349,24 @@ function play(sound) {
 }
 
 /* ===== PLAYER MOVE ===== */
-let playerX = game.clientWidth / 2 - 28;
-player.style.left = playerX + "px";
+let playerX = 0;
+function setPlayerStart() {
+  playerX = game.clientWidth / 2 - 28;
+  player.style.left = playerX + "px";
+}
+setTimeout(setPlayerStart, 100);
+window.addEventListener("resize", setPlayerStart);
 
 game.addEventListener("touchmove", e => {
   if (!gameRunning) return;
   const rect = game.getBoundingClientRect();
-  const x = e.touches[0].clientX - rect.left - 28;
-  movePlayer(x);
-});
+  movePlayer(e.touches[0].clientX - rect.left - 28);
+}, { passive:false });
 
 game.addEventListener("mousemove", e => {
   if (!gameRunning) return;
   const rect = game.getBoundingClientRect();
-  const x = e.clientX - rect.left - 28;
-  movePlayer(x);
+  movePlayer(e.clientX - rect.left - 28);
 });
 
 function movePlayer(x) {
@@ -383,7 +375,7 @@ function movePlayer(x) {
   player.style.left = playerX + "px";
 }
 
-/* ===== START GAME ===== */
+/* ===== START ===== */
 startBtn.onclick = startGame;
 
 function startGame() {
@@ -392,7 +384,7 @@ function startGame() {
   combo = 0;
   updateUI();
   gameRunning = true;
-  spawnInterval = setInterval(spawnItem, 850);
+  spawnInterval = setInterval(spawnItem, 900);
 }
 
 /* ===== SPAWN ===== */
@@ -401,7 +393,6 @@ function spawnItem() {
 
   const item = document.createElement("div");
   const isBomb = Math.random() < 0.18;
-
   item.className = "item";
 
   if (isBomb) {
@@ -413,8 +404,7 @@ function spawnItem() {
     item.appendChild(img);
   }
 
-  const x = Math.random() * (game.clientWidth - 42);
-  item.style.left = x + "px";
+  item.style.left = Math.random() * (game.clientWidth - 40) + "px";
   item.style.top = "-50px";
   game.appendChild(item);
 
@@ -452,22 +442,17 @@ function spawnItem() {
 
 /* ===== COLLISION ===== */
 function checkCollision(item) {
-  const iRect = item.getBoundingClientRect();
-  const pRect = player.getBoundingClientRect();
-  return !(
-    iRect.bottom < pRect.top ||
-    iRect.top > pRect.bottom ||
-    iRect.right < pRect.left ||
-    iRect.left > pRect.right
-  );
+  const i = item.getBoundingClientRect();
+  const p = player.getBoundingClientRect();
+  return !(i.bottom < p.top || i.top > p.bottom || i.right < p.left || i.left > p.right);
 }
 
-/* ===== HEART ANIMATION ===== */
+/* ===== HEART ===== */
 function spawnHeart() {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.textContent = "❤️";
-  heart.style.left = playerX + 20 + "px";
+  heart.style.left = playerX + 18 + "px";
   heart.style.top = (game.clientHeight - 90) + "px";
   game.appendChild(heart);
   setTimeout(() => heart.remove(), 800);
@@ -485,13 +470,8 @@ function updateUI() {
 }
 
 /* ===== GIFT ===== */
-giftBtn.onclick = () => {
-  giftScreen.style.display = "flex";
-};
-
-function closeGift() {
-  giftScreen.style.display = "none";
-}
+giftBtn.onclick = () => giftScreen.style.display = "flex";
+function closeGift() { giftScreen.style.display = "none"; }
 </script>
 
 </body>
