@@ -2,17 +2,47 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>Kalp Yağmuru 💖</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 
+:root{
+  --bg1:#ff7abf;
+  --bg2:#ff3c86;
+  --panel:rgba(255,255,255,.25);
+  --glass:rgba(255,255,255,.22);
+  --accent:#ff2f7a;
+}
+
+body.romantic{
+  --bg1:#ff9acb;
+  --bg2:#ff3c86;
+  --accent:#ff2f7a;
+}
+body.pastel{
+  --bg1:#c7d2fe;
+  --bg2:#fbcfe8;
+  --accent:#7c3aed;
+}
+body.dark{
+  --bg1:#141414;
+  --bg2:#2c2c2c;
+  --accent:#f472b6;
+}
+body.neon{
+  --bg1:#020024;
+  --bg2:#090979;
+  --accent:#00ffff;
+}
+
 body{
-  background:radial-gradient(circle at top,#ffb3d9,#ff4f9a,#b1005a);
+  background:radial-gradient(circle at top,var(--bg1),var(--bg2));
   height:100vh;
   overflow:hidden;
   touch-action:none;
+  transition:.4s;
 }
 
 #game{
@@ -32,21 +62,22 @@ body{
 /* ---------- HUD ---------- */
 #hud{
   position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
+  top:10px;
+  left:10px;
+  right:10px;
   display:flex;
   justify-content:space-between;
+  gap:6px;
   z-index:5;
 }
 
 .hud-pill{
-  background:rgba(255,255,255,.25);
-  backdrop-filter:blur(12px);
+  background:var(--glass);
+  backdrop-filter:blur(14px);
   border-radius:999px;
   padding:8px 14px;
-  font-size:15px;
-  font-weight:800;
+  font-size:14px;
+  font-weight:900;
   color:white;
   display:flex;
   align-items:center;
@@ -55,17 +86,45 @@ body{
 }
 
 .hud-pill span{
-  font-size:16px;
+  font-size:15px;
+}
+
+/* ---------- CONTROLS ---------- */
+#controls{
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  z-index:6;
+}
+
+.ctrl-btn{
+  flex:1;
+  background:var(--glass);
+  backdrop-filter:blur(14px);
+  border-radius:16px;
+  padding:10px;
+  font-size:12px;
+  font-weight:900;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  box-shadow:0 8px 22px rgba(0,0,0,.25);
 }
 
 /* ---------- PLAYER ---------- */
 #player{
   position:absolute;
-  bottom:14px;
-  width:78px;
-  height:78px;
+  bottom:20px;
+  width:82px;
+  height:82px;
   background:url("images/player.png") center/contain no-repeat;
-  filter:drop-shadow(0 10px 20px rgba(255,0,120,.6));
+  filter:drop-shadow(0 12px 24px rgba(255,0,120,.6));
   transition:transform .08s ease;
   pointer-events:none;
 }
@@ -96,7 +155,7 @@ body{
   filter:drop-shadow(0 8px 18px rgba(255,0,0,.5));
 }
 
-/* ---------- SCREENS ---------- */
+/* ---------- OVERLAYS ---------- */
 .overlay{
   position:absolute;
   inset:0;
@@ -113,7 +172,7 @@ body{
 
 .overlay-card{
   background:rgba(255,255,255,.22);
-  backdrop-filter:blur(16px);
+  backdrop-filter:blur(18px);
   border-radius:28px;
   padding:26px 22px;
   width:100%;
@@ -129,7 +188,7 @@ body{
 
 .overlay h1{
   font-size:26px;
-  margin-bottom:8px;
+  margin-bottom:6px;
   font-weight:900;
 }
 
@@ -141,7 +200,7 @@ body{
 
 .overlay button{
   width:100%;
-  background:linear-gradient(135deg,#ff79b0,#ff3c86);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
   border:none;
   color:white;
   padding:14px;
@@ -156,7 +215,7 @@ body{
   position:absolute;
   width:14px;
   height:14px;
-  background:radial-gradient(circle at 30% 30%,#fff,#ff4f9a);
+  background:radial-gradient(circle at 30% 30%,#fff,var(--accent));
   border-radius:50%;
   pointer-events:none;
   animation:burst .6s ease-out forwards;
@@ -168,19 +227,15 @@ body{
 }
 
 /* ---------- GAME OVER ---------- */
-#gameOver h1{
-  font-size:24px;
-}
-
 #finalScore{
   font-size:26px;
   font-weight:900;
-  color:#fff;
+  color:white;
 }
 </style>
 </head>
 
-<body>
+<body class="romantic">
 
 <div id="game">
 
@@ -194,11 +249,17 @@ body{
   <!-- PLAYER -->
   <div id="player"></div>
 
-  <!-- START -->
+  <!-- CONTROLS -->
+  <div id="controls">
+    <div class="ctrl-btn" id="soundBtn">🔊 Ses</div>
+    <div class="ctrl-btn" id="themeBtn">🎨 Tema</div>
+  </div>
+
+  <!-- START / GIFT -->
   <div id="startScreen" class="overlay">
     <div class="overlay-card">
-      <h1>💘 Kalp Yağmuru</h1>
-      <p>Sevgilinin fotoğraflarını yakala ❤️<br>Bombalardan kaç 💣</p>
+      <h1>💌 <span id="loverName">Aşkım</span> İçin</h1>
+      <p id="giftText">Bu oyunu sana özel hazırladım 💖<br>Kalplerimizi birlikte yakalayalım 😘</p>
       <button id="startBtn">Oyuna Başla</button>
     </div>
   </div>
@@ -206,8 +267,8 @@ body{
   <!-- GAME OVER -->
   <div id="gameOver" class="overlay" style="display:none">
     <div class="overlay-card">
-      <h1>💔 Oyun Bitti</h1>
-      <p>Toplam Skorun</p>
+      <h1>💖 Harika Oynadın <span id="finalName"></span>!</h1>
+      <p>Skorun</p>
       <div id="finalScore">0</div>
       <button id="restartBtn">Tekrar Oyna</button>
     </div>
@@ -220,6 +281,27 @@ body{
 <audio id="bgSound" src="audios/bg.mp3" loop></audio>
 
 <script>
+/* ===========================
+   🔧 SATIŞ İÇİN AYARLAR
+=========================== */
+
+// 👉 MÜŞTERİ ADI
+const CUSTOMER_NAME = "Umut";
+
+// 👉 HEDİYE MESAJI
+const GIFT_MESSAGE = "Bu oyunu sana özel hazırladım 💖\nKalplerimizi birlikte yakalayalım 😘";
+
+// 👉 FOTOĞRAFLAR
+const images = [
+  "images/love1.jpg",
+  "images/love2.jpg",
+  "images/love3.jpg"
+];
+
+/* ===========================
+   🎮 OYUN MOTORU
+=========================== */
+
 const game = document.getElementById("game");
 const player = document.getElementById("player");
 const scoreEl = document.getElementById("score");
@@ -228,10 +310,19 @@ const bestEl = document.getElementById("best");
 const startScreen = document.getElementById("startScreen");
 const gameOver = document.getElementById("gameOver");
 const finalScoreEl = document.getElementById("finalScore");
+const loverNameEl = document.getElementById("loverName");
+const finalNameEl = document.getElementById("finalName");
+
+const soundBtn = document.getElementById("soundBtn");
+const themeBtn = document.getElementById("themeBtn");
 
 const catchSound = document.getElementById("catchSound");
 const bombSound = document.getElementById("bombSound");
 const bgSound = document.getElementById("bgSound");
+
+loverNameEl.textContent = CUSTOMER_NAME;
+finalNameEl.textContent = CUSTOMER_NAME;
+document.getElementById("giftText").innerHTML = GIFT_MESSAGE.replace(/\n/g,"<br>");
 
 let gameW, gameH;
 let playerX = 0;
@@ -240,16 +331,16 @@ let combo = 0;
 let speed = 2.1;
 let running = false;
 let spawnTimer, moveTimer;
+let soundOn = true;
 
-const images = [
-  "images/love1.jpg",
-  "images/love2.jpg",
-  "images/love3.jpg"
-];
+const themes = ["romantic","pastel","dark","neon"];
+let themeIndex = 0;
 
+/* ---------- BEST SCORE ---------- */
 let bestScore = localStorage.getItem("kalpBest") || 0;
 bestEl.textContent = bestScore;
 
+/* ---------- RESIZE ---------- */
 function resize(){
   gameW = game.clientWidth;
   gameH = game.clientHeight;
@@ -268,11 +359,13 @@ function startGame(){
   startScreen.style.display = "none";
   gameOver.style.display = "none";
 
-  bgSound.currentTime = 0;
-  bgSound.play().catch(()=>{});
-
   playerX = gameW / 2 - player.offsetWidth / 2;
   player.style.left = playerX + "px";
+
+  if(soundOn){
+    bgSound.currentTime = 0;
+    bgSound.play().catch(()=>{});
+  }
 
   spawnTimer = setInterval(spawnItem, 820);
   moveTimer = setInterval(moveItems, 16);
@@ -327,12 +420,16 @@ function moveItems(){
 
     if(checkCollision(el)){
       if(el.dataset.type === "bomb"){
-        bombSound.currentTime = 0;
-        bombSound.play().catch(()=>{});
+        if(soundOn){
+          bombSound.currentTime = 0;
+          bombSound.play().catch(()=>{});
+        }
         endGame();
       } else {
-        catchSound.currentTime = 0;
-        catchSound.play().catch(()=>{});
+        if(soundOn){
+          catchSound.currentTime = 0;
+          catchSound.play().catch(()=>{});
+        }
         score += 10 + combo * 3;
         combo++;
         speed += 0.05;
@@ -384,6 +481,18 @@ function heartBurst(el){
     setTimeout(()=>h.remove(),600);
   }
 }
+
+/* ---------- CONTROLS ---------- */
+soundBtn.onclick = ()=>{
+  soundOn = !soundOn;
+  soundBtn.textContent = soundOn ? "🔊 Ses" : "🔇 Sessiz";
+  if(!soundOn) bgSound.pause();
+};
+
+themeBtn.onclick = ()=>{
+  themeIndex = (themeIndex + 1) % themes.length;
+  document.body.className = themes[themeIndex];
+};
 
 /* ---------- BUTTONS ---------- */
 document.getElementById("startBtn").onclick = startGame;
