@@ -4,60 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kalp Yağmuru 💖</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial, sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+
 body{
-  background:linear-gradient(180deg,#ff6fae,#ff4d88);
+  background:radial-gradient(circle at top,#ffb3d9,#ff4f9a,#b1005a);
   height:100vh;
   overflow:hidden;
   touch-action:none;
 }
+
 #game{
   position:relative;
   width:100vw;
   height:100svh;
   max-width:420px;
   margin:0 auto;
-  background:rgba(255,255,255,0.15);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.05)),
+    url("images/bg.jpg") center/cover no-repeat;
   overflow:hidden;
+  border-radius:22px;
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
 }
+
+/* ---------- HUD ---------- */
 #hud{
   position:absolute;
-  top:4px;
-  left:0;
-  width:100%;
+  top:12px;
+  left:12px;
+  right:12px;
   display:flex;
   justify-content:space-between;
-  padding:0 10px;
-  font-size:12px;
-  color:white;
   z-index:5;
 }
+
+.hud-pill{
+  background:rgba(255,255,255,.25);
+  backdrop-filter:blur(12px);
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:15px;
+  font-weight:800;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 6px 18px rgba(255,80,150,.35);
+}
+
+.hud-pill span{
+  font-size:16px;
+}
+
+/* ---------- PLAYER ---------- */
 #player{
   position:absolute;
-  bottom:6px;
-  width:48px;
-  height:48px;
+  bottom:14px;
+  width:78px;
+  height:78px;
   background:url("images/player.png") center/contain no-repeat;
-  left:50%;
-  transform:translateX(-50%);
+  filter:drop-shadow(0 10px 20px rgba(255,0,120,.6));
+  transition:transform .08s ease;
   pointer-events:none;
 }
+
+#player.catch{
+  transform:scale(1.12);
+}
+
+/* ---------- ITEMS ---------- */
 .item{
   position:absolute;
-  width:42px;
-  height:42px;
-  border-radius:10px;
+  width:64px;
+  height:64px;
+  border-radius:18px;
   background-size:cover;
   background-position:center;
+  box-shadow:0 10px 28px rgba(0,0,0,.3);
+  animation:float 2s ease-in-out infinite alternate;
 }
+
+@keyframes float{
+  from{transform:translateY(0)}
+  to{transform:translateY(8px)}
+}
+
 .bomb{
   background:url("images/bomb.png") center/contain no-repeat;
+  filter:drop-shadow(0 8px 18px rgba(255,0,0,.5));
 }
-#startScreen,#gameOverScreen{
+
+/* ---------- SCREENS ---------- */
+.overlay{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.55);
+  background:linear-gradient(180deg,rgba(255,60,150,.85),rgba(120,0,80,.95));
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -65,42 +108,111 @@ body{
   color:white;
   text-align:center;
   z-index:10;
-  padding:16px;
+  padding:22px;
 }
-h1{font-size:20px;margin-bottom:6px}
-p{font-size:13px;margin-bottom:10px}
-button{
-  background:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:999px;
+
+.overlay-card{
+  background:rgba(255,255,255,.22);
+  backdrop-filter:blur(16px);
+  border-radius:28px;
+  padding:26px 22px;
+  width:100%;
+  max-width:340px;
+  box-shadow:0 25px 60px rgba(0,0,0,.45);
+  animation:pop .4s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.overlay h1{
+  font-size:26px;
+  margin-bottom:8px;
+  font-weight:900;
+}
+
+.overlay p{
   font-size:14px;
-  font-weight:bold;
+  opacity:.95;
+  margin-bottom:16px;
+}
+
+.overlay button{
+  width:100%;
+  background:linear-gradient(135deg,#ff79b0,#ff3c86);
+  border:none;
+  color:white;
+  padding:14px;
+  border-radius:16px;
+  font-size:15px;
+  font-weight:900;
+  box-shadow:0 8px 22px rgba(255,60,130,.5);
+}
+
+/* ---------- EFFECTS ---------- */
+.heart-burst{
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:radial-gradient(circle at 30% 30%,#fff,#ff4f9a);
+  border-radius:50%;
+  pointer-events:none;
+  animation:burst .6s ease-out forwards;
+}
+
+@keyframes burst{
+  from{transform:translate(0,0) scale(1);opacity:1}
+  to{transform:translate(var(--x),var(--y)) scale(.1);opacity:0}
+}
+
+/* ---------- GAME OVER ---------- */
+#gameOver h1{
+  font-size:24px;
+}
+
+#finalScore{
+  font-size:26px;
+  font-weight:900;
+  color:#fff;
 }
 </style>
 </head>
+
 <body>
 
 <div id="game">
+
+  <!-- HUD -->
   <div id="hud">
-    <div>💖 <span id="score">0</span></div>
-    <div>🔥 <span id="combo">0</span></div>
-    <div>🏆 <span id="best">0</span></div>
+    <div class="hud-pill">💖 <span id="score">0</span></div>
+    <div class="hud-pill">🔥 <span id="combo">0</span></div>
+    <div class="hud-pill">🏆 <span id="best">0</span></div>
   </div>
 
+  <!-- PLAYER -->
   <div id="player"></div>
 
-  <div id="startScreen">
-    <h1>💘 Kalp Yağmuru</h1>
-    <p>Sevgilinin fotoğraflarını yakala ❤️ Bombalardan kaç 💣</p>
-    <button id="startBtn">Başla</button>
+  <!-- START -->
+  <div id="startScreen" class="overlay">
+    <div class="overlay-card">
+      <h1>💘 Kalp Yağmuru</h1>
+      <p>Sevgilinin fotoğraflarını yakala ❤️<br>Bombalardan kaç 💣</p>
+      <button id="startBtn">Oyuna Başla</button>
+    </div>
   </div>
 
-  <div id="gameOverScreen" style="display:none">
-    <h1>💔 Bitti</h1>
-    <p>Skorun: <span id="finalScore">0</span></p>
-    <button id="restartBtn">Tekrar</button>
+  <!-- GAME OVER -->
+  <div id="gameOver" class="overlay" style="display:none">
+    <div class="overlay-card">
+      <h1>💔 Oyun Bitti</h1>
+      <p>Toplam Skorun</p>
+      <div id="finalScore">0</div>
+      <button id="restartBtn">Tekrar Oyna</button>
+    </div>
   </div>
+
 </div>
 
 <audio id="catchSound" src="audios/catch.mp3"></audio>
@@ -114,7 +226,7 @@ const scoreEl = document.getElementById("score");
 const comboEl = document.getElementById("combo");
 const bestEl = document.getElementById("best");
 const startScreen = document.getElementById("startScreen");
-const gameOverScreen = document.getElementById("gameOverScreen");
+const gameOver = document.getElementById("gameOver");
 const finalScoreEl = document.getElementById("finalScore");
 
 const catchSound = document.getElementById("catchSound");
@@ -125,7 +237,7 @@ let gameW, gameH;
 let playerX = 0;
 let score = 0;
 let combo = 0;
-let speed = 1.9;
+let speed = 2.1;
 let running = false;
 let spawnTimer, moveTimer;
 
@@ -135,7 +247,7 @@ const images = [
   "images/love3.jpg"
 ];
 
-const bestScore = localStorage.getItem("kalpBest") || 0;
+let bestScore = localStorage.getItem("kalpBest") || 0;
 bestEl.textContent = bestScore;
 
 function resize(){
@@ -145,22 +257,24 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
+/* ---------- GAME FLOW ---------- */
 function startGame(){
   score = 0;
   combo = 0;
-  speed = 1.9;
+  speed = 2.1;
   running = true;
   scoreEl.textContent = 0;
   comboEl.textContent = 0;
   startScreen.style.display = "none";
-  gameOverScreen.style.display = "none";
+  gameOver.style.display = "none";
+
   bgSound.currentTime = 0;
   bgSound.play().catch(()=>{});
 
   playerX = gameW / 2 - player.offsetWidth / 2;
   player.style.left = playerX + "px";
 
-  spawnTimer = setInterval(spawnItem, 850);
+  spawnTimer = setInterval(spawnItem, 820);
   moveTimer = setInterval(moveItems, 16);
 }
 
@@ -173,13 +287,15 @@ function endGame(){
   finalScoreEl.textContent = score;
 
   if(score > bestScore){
-    localStorage.setItem("kalpBest", score);
-    bestEl.textContent = score;
+    bestScore = score;
+    localStorage.setItem("kalpBest", bestScore);
+    bestEl.textContent = bestScore;
   }
 
-  gameOverScreen.style.display = "flex";
+  gameOver.style.display = "flex";
 }
 
+/* ---------- SPAWN ---------- */
 function spawnItem(){
   if(!running) return;
   const el = document.createElement("div");
@@ -194,12 +310,13 @@ function spawnItem(){
   }
 
   el.dataset.type = isBomb ? "bomb" : "love";
-  el.style.left = Math.random() * (gameW - 42) + "px";
-  el.style.top = "-50px";
-  el.dataset.y = -50;
+  el.style.left = Math.random() * (gameW - 64) + "px";
+  el.style.top = "-70px";
+  el.dataset.y = -70;
   game.appendChild(el);
 }
 
+/* ---------- MOVE ---------- */
 function moveItems(){
   if(!running) return;
   document.querySelectorAll(".item").forEach(el=>{
@@ -216,16 +333,19 @@ function moveItems(){
       } else {
         catchSound.currentTime = 0;
         catchSound.play().catch(()=>{});
-        score += 10 + combo*2;
+        score += 10 + combo * 3;
         combo++;
-        speed += 0.04;
+        speed += 0.05;
         scoreEl.textContent = score;
         comboEl.textContent = combo;
+        heartBurst(el);
+        player.classList.add("catch");
+        setTimeout(()=>player.classList.remove("catch"),120);
         el.remove();
       }
     }
 
-    if(y > gameH + 60){
+    if(y > gameH + 80){
       combo = 0;
       comboEl.textContent = combo;
       el.remove();
@@ -233,12 +353,14 @@ function moveItems(){
   });
 }
 
+/* ---------- COLLISION ---------- */
 function checkCollision(el){
   const p = player.getBoundingClientRect();
   const i = el.getBoundingClientRect();
   return !(i.right < p.left || i.left > p.right || i.bottom < p.top || i.top > p.bottom);
 }
 
+/* ---------- TOUCH MOVE ---------- */
 game.addEventListener("pointermove", e=>{
   if(!running) return;
   const rect = game.getBoundingClientRect();
@@ -247,8 +369,26 @@ game.addEventListener("pointermove", e=>{
   player.style.left = x + "px";
 });
 
+/* ---------- HEART BURST ---------- */
+function heartBurst(el){
+  for(let i=0;i<10;i++){
+    const h = document.createElement("div");
+    h.className = "heart-burst";
+    const x = Math.random()*60-30;
+    const y = Math.random()*60-30;
+    h.style.setProperty("--x", x+"px");
+    h.style.setProperty("--y", y+"px");
+    h.style.left = el.offsetLeft + el.offsetWidth/2 + "px";
+    h.style.top = el.offsetTop + el.offsetHeight/2 + "px";
+    game.appendChild(h);
+    setTimeout(()=>h.remove(),600);
+  }
+}
+
+/* ---------- BUTTONS ---------- */
 document.getElementById("startBtn").onclick = startGame;
 document.getElementById("restartBtn").onclick = startGame;
 </script>
+
 </body>
 </html>
